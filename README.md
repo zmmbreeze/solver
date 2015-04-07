@@ -26,4 +26,8 @@ API
 Install
 --
 
+You can install simple-solver by `npm` or `bower`.
+
+    npm install simple-solver
+    bower install simple-solver
 

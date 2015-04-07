@@ -1,7 +1,7 @@
 {
   "name": "simple-solver",
   "version": "0.1.0",
-  "description": "Help you solve simple mathematical expressions",
+  "description": "Help you solve simple mathematical expressions.",
   "main": "src/solver.js",
   "keywords": [
     "solver",
