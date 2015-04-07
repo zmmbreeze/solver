@@ -1,10 +1,16 @@
 {
-  "name": "project-starter",
+  "name": "simple-solver",
   "version": "0.1.0",
-  "description": "Project starter with common tasks and scenarios",
+  "description": "Help you do simple mathematical expressions",
+  "main": "src/solver.js",
+  "keywords": [
+    "solver",
+    "mathematical",
+    "equation"
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/zmmbreeze/project-starter.git"
+    "url": "https://github.com/zmmbreeze/solver.git"
   },
   "devDependencies": {
     "browser-sync": "~1.3.6",
