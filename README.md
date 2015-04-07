@@ -1,7 +1,7 @@
 solver
 ============
 
-Help you do simple mathmatic.
+Help you do simple mathematical expressions.
 
     1 + 1 = 2
 
