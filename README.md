@@ -1,7 +1,7 @@
 solver
 ============
 
-Help you do simple mathematical expressions.
+Help you solve simple mathematical expressions.
 
     1 + 1 = 2
 
@@ -22,3 +22,8 @@ API
     eq.solve({ x: 1 }) === 4;
     eq.solve({ x: 2 }) === 7;
     eq.solve({ x: 3 }) === 10;
+
+Install
+--
+
+
