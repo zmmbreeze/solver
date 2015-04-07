@@ -7,7 +7,13 @@ var SY = function (equation) {
     this.ops = [];
     this.curNumber = '';
     this.curMark = '';
-    this.equation = equation;
+    this.curIsMinus = false;
+    this.original = equation;
+    /**
+     * next input may be negative mark
+     * @type {boolean}
+     */
+    this.nimbnm = true;
     this.parse(equation);
 };
 
@@ -15,6 +21,11 @@ SY.prototype.parseNumber = function (input) {
     var isNumber = util.isNumber(input);
     if (isNumber) {
         this.curNumber += input;
+        if (this.curIsMinus) {
+            this.curNumber = '-' + this.curNumber;
+            this.curIsMinus = false;
+        }
+        this.nimbnm = false;
     }
     else {
         this.saveNumber();
@@ -34,6 +45,11 @@ SY.prototype.parseMark = function (input) {
     var isMark = util.isMark(input);
     if (isMark) {
         this.curMark += input;
+        if (this.curIsMinus) {
+            this.curMark = '-' + this.curMark;
+            this.curIsMinus = false;
+        }
+        this.nimbnm = false;
     }
     else {
         this.saveMark();
@@ -44,8 +60,13 @@ SY.prototype.parseMark = function (input) {
 
 SY.prototype.saveMark = function () {
     if (this.curMark) {
-        this.output.push(this.curMark);
-        this.marks.push(this.curMark);
+        var negative = this.curMark.charAt(0) === '-';
+        var mark = negative ? this.curMark.replace(/\-/g, '') : this.curMark;
+        this.output.push({
+            negative: negative,
+            mark: mark
+        });
+        this.marks.push(mark);
         this.curMark = '';
     }
 };
@@ -53,6 +74,22 @@ SY.prototype.saveMark = function () {
 SY.prototype.parseOp = function (input) {
     var priority = util.getOpPriority(input);
     if (priority) {
+        if (this.nimbnm) {
+            // 1 + +2
+            // 1 + -2
+            // 1 - *2   error
+            switch (input) {
+                case '-':
+                    this.curIsMinus = true;
+                    break;
+                case '+':
+                    break;
+                default:
+                    throw new Error('Unexpected token ' + input);
+            }
+            return priority;
+        }
+
         // is op
         var lastOp;
         var lastPriority;
@@ -74,6 +111,7 @@ SY.prototype.parseOp = function (input) {
         }
 
         this.ops.push(input);
+        this.nimbnm = true;
     }
 
     return !!priority;
@@ -103,6 +141,7 @@ SY.prototype.parseRBrackets = function (input) {
         if (!hasMatchBrackets) {
             throw new Error('No matched "(".');
         }
+        this.nimbnm = false;
     }
 
     return isRBrackets;
@@ -127,6 +166,7 @@ SY.prototype.parse = function (eq) {
 
         if (input === '(') {
             this.ops.push(input);
+            this.nimbnm = true;
             continue;
         }
 
@@ -152,7 +192,18 @@ SY.prototype.getMarks = function () {
 
 SY.prototype.solve = function (opt_marksValue) {
     var marksValue = opt_marksValue || {};
-    return executor.solve(opt_marksValue);
+    return executor.solve(this, opt_marksValue);
+};
+
+SY.prototype.toString = function () {
+    var outputs = this.output;
+    var o;
+    var result = [];
+    for (var i = 0, l = outputs.length; i < l; i++) {
+        o = outputs[i];
+        result.push(o.mark ? ((o.negative ? '-' : '') + o.mark) : o);
+    }
+    return result.join(' ');
 };
 
 

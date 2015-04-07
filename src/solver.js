@@ -11,7 +11,7 @@
     var shuntingYard = require('./lib/shuntingYard');
     var executor = require('./lib/executor');
 
-    global.solver = {
+    var solver = {
         'solve': function (equation, opt_marksValue) {
             equation = solver.compile(equation);
             return equation.solve(opt_marksValue);
@@ -20,7 +20,8 @@
             return shuntingYard(equation);
         }
     };
+    global.solver = solver;
 
-    return global.solver;
+    return solver;
 }));
 
